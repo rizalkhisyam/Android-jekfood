@@ -3,16 +3,27 @@ import {
     createMaterialBottomTabNavigator
 } from 'react-navigation-material-bottom-tabs';
 import {createAppContainer} from 'react-navigation';
-import { View, StyleSheet, Text } from 'react-native';
+import { 
+    View, 
+    StyleSheet, 
+    Text,
+    Image
+ } from 'react-native';
 import Payment from '../component/PaymentScreen';
 import Food from '../component/FoodScreen';
 import Account from '../component/AccountScreen';
+import Doodle from '../component/images/doodle_jekfood.png';
 
 class Beranda extends Component {
   render() {
     return(
-        <View>
-            <Text>Beranda cuy</Text>
+        <View style={styles.content}>
+            
+            <Image resizeMode={'cover'} source={Doodle} style={styles.doodle_img}></Image>
+            <Text  style={styles.name_user}> Halo, User! </Text>
+            <View style={styles.menu_user}>
+
+            </View>
         </View>
     );
   }
@@ -50,16 +61,27 @@ export default createAppContainer(BottomTabMaterial);
 
 const styles = StyleSheet.create({
 content:{
-    flex :1,
     alignItems: 'center',
-    justifyContent: 'center'
 },
-button_touch:{
-    backgroundColor: '#FEC84B',
-    width:200,
-    height: 100,
-    borderRadius: 30,
-    alignItems: 'center',
-    justifyContent: 'center'
+doodle_img:{
+    position:'absolute',
+    width: '100%'
+},
+name_user:{
+    fontSize: 23,
+    marginTop: 20
+},
+menu_user:{
+    width:300,
+    height:200,
+    backgroundColor:'white',
+    borderRadius: 4,
+    opacity:0.9,
+    marginTop:22,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height:4},
+    shadowOpacity:0.8,
+    shadowRadius:4,
+    elevation:1
 }
 })

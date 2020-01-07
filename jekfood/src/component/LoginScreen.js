@@ -67,14 +67,14 @@ label_email:{
 },
 inputan:{
     width:327,
-    height:45,
+    height:50,
     borderColor: '#707070',
     borderWidth:0.5,
     borderRadius:4
 },
 button_login:{
     width:327,
-    height: 40,
+    height: 50,
     backgroundColor: '#FEC84B',
     marginTop: 35,
     justifyContent: 'center',
@@ -89,7 +89,7 @@ btn_log:{
 },
 button_reg:{
     width: 327,
-        height: 40,
+        height: 50,
         backgroundColor:'gray',
         marginTop: 10,
         justifyContent: 'center',

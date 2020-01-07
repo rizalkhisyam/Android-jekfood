@@ -68,7 +68,7 @@ label_email:{
 },
 inputan:{
     width:327,
-    height:45,
+    height:50,
     borderColor: '#707070',
     borderWidth:0.5,
     borderRadius:4
@@ -80,7 +80,7 @@ btn_log:{
 },
 button_reg:{
     width: 327,
-    height: 40,
+    height: 50,
     backgroundColor:'gray',
     marginTop: 35,
     justifyContent: 'center',
