@@ -13,6 +13,7 @@ import RegisterScreen from './screens/RegisterScreen';
 import FoodScreen from './screens/FoodScreen';
 import PaymentScreen from './screens/PaymentScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import HistoryScreen from './screens/HistoryScreen';
 
 import * as firebase from 'firebase';
 
@@ -27,13 +28,20 @@ var firebaseConfig = {
   measurementId: "G-0RKVP2D71T"
 };
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+!firebase.apps.length ? firebase.initializeApp(firebaseConfig) : firebase.app();
+
 
 const AppTabNavigator = createBottomTabNavigator({
   Beranda:{
     screen:HomeScreen,
     navigationOptions:{
       tabBarIcon: ({ tintColor }) => <Ionicons name="ios-home" size={24} color={tintColor}></Ionicons>
+    }
+  },
+  Riwayat:{
+    screen:HistoryScreen,
+    navigationOptions:{
+      tabBarIcon: ({ tintColor }) => <Ionicons name="ios-list-box" size={24} color={tintColor}></Ionicons>
     }
   },
   Pembayaran:{
@@ -48,10 +56,10 @@ const AppTabNavigator = createBottomTabNavigator({
       tabBarIcon: ({ tintColor }) => <Ionicons name="ios-restaurant" size={24} color={tintColor}></Ionicons>
     }
   },
-  Akun:{
+  Restoran:{
     screen:ProfileScreen,
     navigationOptions:{
-      tabBarIcon: ({ tintColor }) => <Ionicons name="ios-contact" size={24} color={tintColor}></Ionicons>
+      tabBarIcon: ({ tintColor }) => <Ionicons name="ios-settings" size={24} color={tintColor}></Ionicons>
     }
   }
 },{
