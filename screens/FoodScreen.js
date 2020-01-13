@@ -4,13 +4,6 @@ import setting_menu from '../assets/menu_v1.png';
 import available_menu from '../assets/menu_v2.png';
 import add_menu from '../assets/menu_v3.png';
 
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
-
-const Content = createAppContainer({
-
-})
-
 export default class FoodScreen extends React.Component{
 
     render(){
@@ -20,7 +13,7 @@ export default class FoodScreen extends React.Component{
                     <Text style={{marginTop:35, fontWeight:'bold'}}>Menu</Text>
                 </View>
                 <View style={styles.menu_food}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('MenuSetting')}>
                         <View style={styles.menu_bar}>
                         
                             <View style={{flexDirection:'row', alignItems:'center'}}>
@@ -41,7 +34,7 @@ export default class FoodScreen extends React.Component{
                     </TouchableOpacity>
                 </View>
                 <View style={styles.menu_food_2}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('ServMenu')}>
                         <View style={styles.menu_bar}>
                         
                             <View style={{flexDirection:'row', alignItems:'center'}}>
@@ -63,7 +56,7 @@ export default class FoodScreen extends React.Component{
                     
                 </View>
                 <View style={styles.menu_food_3}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('AddMenu')}>
                         <View style={styles.menu_bar}>
                         
                             <View style={{flexDirection:'row', alignItems:'center'}}>
@@ -75,7 +68,7 @@ export default class FoodScreen extends React.Component{
                                         Tambah Menu
                                     </Text>
                                     <Text>
-                                        Kelola menu makanan dan kategori{'\n'}dagangan anda disini
+                                        Daftarkan menu makanan anda disini{'\n'}Upload foto dan deskripsi makanan
                                     </Text>
                                 </View>
                             </View>

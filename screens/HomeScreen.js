@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, LayoutAnimation } from 'react-native';
+import { View, Text, StyleSheet, Image, LayoutAnimation, ScrollView } from 'react-native';
 import Doodle from '../assets/doodle_jekfood.png';
 import Logo_store from '../assets/store_jekfood.png';
 import Logo_order from '../assets/order_logo.png';

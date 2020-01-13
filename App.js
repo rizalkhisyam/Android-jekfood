@@ -15,6 +15,10 @@ import PaymentScreen from './screens/PaymentScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import HistoryScreen from './screens/HistoryScreen';
 
+import MenuSetting from './screens/MenuSetting';
+import ServMenu from './screens/ServMenu';
+import AddMenu from './screens/AddMenu';
+
 import * as firebase from 'firebase';
 
 var firebaseConfig = {
@@ -78,8 +82,14 @@ const AppContainer = createStackNavigator({
           }
         }
         ),
-        postModal:{
-          screen:PaymentScreen
+        MenuSetting:{
+          screen:MenuSetting
+        },
+        ServMenu:{
+          screen:ServMenu
+        },
+        AddMenu:{
+          screen:AddMenu
         }
       },{
         mode:'modal',
