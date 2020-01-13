@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     content:{
         flex:1,
         alignItems:'center',
-        backgroundColor:'#EFE8E8'
+    
     },
     doodle_img:{
         position:'absolute',

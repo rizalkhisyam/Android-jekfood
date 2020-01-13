@@ -30,57 +30,75 @@ var firebaseConfig = {
 // Initialize Firebase
 !firebase.apps.length ? firebase.initializeApp(firebaseConfig) : firebase.app();
 
+const AppContainer = createStackNavigator({
+  
+        default: createBottomTabNavigator({
+          Beranda:{
+            screen:HomeScreen,
+            navigationOptions:{
+              tabBarIcon: ({ tintColor }) => <Ionicons name="ios-home" size={24} color={tintColor}></Ionicons>
+            }
+          },
+          Riwayat:{
+            screen:HistoryScreen,
+            navigationOptions:{
+              tabBarIcon: ({ tintColor }) => <Ionicons name="ios-list-box" size={24} color={tintColor}></Ionicons>
+            }
+          },
+          Makanan:{
+            screen:FoodScreen,
+            navigationOptions:{
+              tabBarIcon: ({ tintColor }) => <Ionicons name="ios-restaurant" size={24} color={tintColor}></Ionicons>
+            }
+          },
+          Pembayaran:{
+            screen:PaymentScreen,
+            navigationOptions:{
+              tabBarIcon: ({ tintColor }) => <Ionicons name="ios-card" size={24} color={tintColor}></Ionicons>
+            }
+          },
+          Restoran:{
+            screen:ProfileScreen,
+            navigationOptions:{
+              tabBarIcon: ({ tintColor }) => <Ionicons name="ios-settings" size={24} color={tintColor}></Ionicons>
+            }
+          }
+        },{
+          defaultNavigationOptions:{
+          tabBarOnPress:({ navigation, defaultHandler}) => {
+            if(navigation.state.key === 'Menu'){
+              navigation.navigate('postModal')
+            }else{
+              defaultHandler()
+            }
+          }
+          },
+          tabBarOptions:{
+            activeTintColor:'#FEC84B'
+          }
+        }
+        ),
+        postModal:{
+          screen:PaymentScreen
+        }
+      },{
+        mode:'modal',
+        headerMode:'none'
+      }
+  );
 
-const AppTabNavigator = createBottomTabNavigator({
-  Beranda:{
-    screen:HomeScreen,
-    navigationOptions:{
-      tabBarIcon: ({ tintColor }) => <Ionicons name="ios-home" size={24} color={tintColor}></Ionicons>
-    }
-  },
-  Riwayat:{
-    screen:HistoryScreen,
-    navigationOptions:{
-      tabBarIcon: ({ tintColor }) => <Ionicons name="ios-list-box" size={24} color={tintColor}></Ionicons>
-    }
-  },
-  Pembayaran:{
-    screen:PaymentScreen,
-    navigationOptions:{
-      tabBarIcon: ({ tintColor }) => <Ionicons name="ios-card" size={24} color={tintColor}></Ionicons>
-    }
-  },
-  Makanan:{
-    screen:FoodScreen,
-    navigationOptions:{
-      tabBarIcon: ({ tintColor }) => <Ionicons name="ios-restaurant" size={24} color={tintColor}></Ionicons>
-    }
-  },
-  Restoran:{
-    screen:ProfileScreen,
-    navigationOptions:{
-      tabBarIcon: ({ tintColor }) => <Ionicons name="ios-settings" size={24} color={tintColor}></Ionicons>
-    }
-  }
-},{
-  tabBarOptions:{
-    activeTintColor:'#FEC84B'
-  }
-}
-)
+      const AuthStack = createStackNavigator({
+        Login: LoginScreen,
+        Register: RegisterScreen
+      })
 
-const AuthStack = createStackNavigator({
-  Login: LoginScreen,
-  Register: RegisterScreen
-})
-
-export default createAppContainer(
-  createSwitchNavigator({
-    Splash: SplashScreen,
-    App: AppTabNavigator,
-    Auth: AuthStack
-  },{
-    initialRouteName: "Splash"
-  }
+      export default createAppContainer(
+        createSwitchNavigator({
+          Splash: SplashScreen,
+          App: AppContainer,
+          Auth: AuthStack
+        },{
+          initialRouteName: "Splash"
+        }
   )
 )
