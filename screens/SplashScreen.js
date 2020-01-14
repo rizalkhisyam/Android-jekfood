@@ -2,6 +2,8 @@ import React from 'react';
 import { Image, View, StyleSheet } from 'react-native';
 import Logo from '../assets/logo_jekfood.png'
 import * as firebase from 'firebase';
+import Fire from '../Fire';
+
 
 export default class SplashScreen extends React.Component{
 

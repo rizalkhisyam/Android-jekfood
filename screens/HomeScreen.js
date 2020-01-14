@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, LayoutAnimation, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, LayoutAnimation, ScrollView, TouchableOpacity } from 'react-native';
 import Doodle from '../assets/doodle_jekfood.png';
 import Logo_store from '../assets/store_jekfood.png';
+import Notif from '../assets/Notif_order.png';
 import Logo_order from '../assets/order_logo.png';
 
 import * as firebase from 'firebase';
@@ -53,39 +54,50 @@ export default class HomeScreen extends React.Component{
             </View>
             <View style={styles.order}>
                 <Text style={styles.order_title}>Pesanan Hari Ini</Text>
-                <View style={styles.order_list}>
-                    <View style={styles.order_in}>
-                        <View style={styles.order_item}>
-                            <View>
-                                <Image source={Logo_order}></Image>
+
+                <View style={styles.notif_order}>
+                <View style={styles.menu_food}>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('MenuSetting')}>
+                        <View style={styles.menu_bar}>
+                        
+                            <View style={{flexDirection:'row', alignItems:'center'}}>
+                                <View style={styles.menu_button}>
+                                    <Image style={styles.img_1} source={Notif}></Image>
+                                </View>
+                                <View>
+                                    <Text style={{fontWeight:'bold'}}>
+                                        Nama Driver Jekfood
+                                    </Text>
+                                    <Text style={{color:'#C1C0C0'}}>
+                                        2 menit yang lalu
+                                    </Text>
+                                </View>
                             </View>
-                            <View>
-                                <Text>Driver Jekfood</Text>
+                        
+                        </View>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.menu_food}>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('MenuSetting')}>
+                        <View style={styles.menu_bar}>
+                        
+                            <View style={{flexDirection:'row', alignItems:'center'}}>
+                                <View style={styles.menu_button}>
+                                    <Image style={styles.img_1} source={Notif}></Image>
+                                </View>
+                                <View>
+                                    <Text style={{fontWeight:'bold'}}>
+                                        Nama Driver Jekfood
+                                    </Text>
+                                    <Text style={{color:'#C1C0C0'}}>
+                                        2 menit yang lalu
+                                    </Text>
+                                </View>
                             </View>
+                        
                         </View>
-                        <View>
-                            <Text style={styles.time_order}>11.20</Text>
-                        </View>
-                        <View>
-                            <Text style={styles.order_detail}>Sentuh untuk lihat detail pesanan</Text>
-                        </View>
-                    </View>
-                    <View style={styles.order_in}>
-                    <View style={styles.order_item}>
-                            <View>
-                                <Image source={Logo_order}></Image>
-                            </View>
-                            <View>
-                                <Text>Driver Jekfood</Text>
-                            </View>
-                        </View>
-                        <View>
-                            <Text style={styles.time_order}>11.20</Text>
-                        </View>
-                        <View>
-                            <Text style={styles.order_detail}>Sentuh untuk lihat detail pesanan</Text>
-                        </View>
-                    </View>
+                    </TouchableOpacity>
+                </View>
                 </View>
             </View>
 
@@ -136,7 +148,8 @@ const styles = StyleSheet.create({
     order:{
         marginTop:20,
         width: '100%',
-        alignItems:'center'
+        alignItems:'center',
+        backgroundColor:'white'
     },
     order_title:{
         fontSize: 20,
@@ -165,5 +178,24 @@ const styles = StyleSheet.create({
         fontSize:12,
         color:'gray',
         marginLeft:50
+    },
+    menu_food:{
+        width:'100%',
+        backgroundColor:'white',
+        marginTop:2,
+    },
+    notif_order:{
+        width: '100%',
+        flexDirection:'column'
+    },
+    menu_bar:{
+
+    },
+    img_1:{
+        width:45,
+        height:45
+    },
+    menu_button:{
+        margin:20
     }
 })

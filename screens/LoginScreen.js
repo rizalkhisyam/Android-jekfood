@@ -22,7 +22,7 @@ export default class LoginScreen extends React.Component{
 
     render(){
         return(
-            <View style={styles.content}>
+            <View style={styles.contentainer}>
                 <View style={styles.content}>
                 <Image style={styles.logo_home} source={Logo}></Image> 
             <View>
@@ -72,12 +72,16 @@ export default class LoginScreen extends React.Component{
 }
 
 const styles = StyleSheet.create({
+    contentainer:{
+        flex:1,
+        backgroundColor:'white'
+    },
     content:{
         alignItems:'center',
-        marginTop:70
+        backgroundColor:'white'
     },
     logo_home:{
-    
+        marginTop:50
     },
     wellcome:{
         fontSize:20,
@@ -95,7 +99,8 @@ const styles = StyleSheet.create({
     },
     label_email:{
         marginTop:10,
-        marginLeft: -165
+        marginLeft: -165,
+        fontWeight:'bold'
     },
     inputan:{
         width:327,

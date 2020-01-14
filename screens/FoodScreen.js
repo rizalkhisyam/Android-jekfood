@@ -1,8 +1,17 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, YellowBox} from 'react-native';
 import setting_menu from '../assets/menu_v1.png';
 import available_menu from '../assets/menu_v2.png';
 import add_menu from '../assets/menu_v3.png';
+
+import _ from 'lodash';
+YellowBox.ignoreWarnings(['Setting a timer']);
+const _console = _.clone(console);
+console.warn = message => {
+    if (message.indexOf('Setting a timer') <= -1) {
+        _console.warn(message);
+    }
+};
 
 export default class FoodScreen extends React.Component{
 
