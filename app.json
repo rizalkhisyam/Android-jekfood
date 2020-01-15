@@ -24,7 +24,17 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
-    }
+      "supportsTablet": true,
+      "bundleIdentifier": "com.expo.jekfood",
+      "config": {
+        "googleSignIn": {
+          "reservedClientId": "<YOUR_IOS_CLIENT_ID>"
+        }
+      }
+    },
+    "android": {
+      "package": "com.expo.jekfood",
+      // "googleServicesFile": "./google-services.json"
+  }
   }
 }

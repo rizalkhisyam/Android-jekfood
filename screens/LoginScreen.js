@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput } from 'react-native';
 import Logo from '../assets/Logo_orange.png';
+import Logo_google from '../assets/logo_google.png';
 import * as firebase from 'firebase';
 
 export default class LoginScreen extends React.Component{
@@ -13,7 +14,7 @@ export default class LoginScreen extends React.Component{
 
     handleLogin = () => {
         const {email,password} = this.state;
-
+        
         firebase
         .auth()
         .signInWithEmailAndPassword(email,password)
@@ -43,7 +44,8 @@ export default class LoginScreen extends React.Component{
             </View>
 
             <TextInput 
-            style={styles.inputan} 
+            style={styles.inputan}
+            autoFocus={true} 
             autoCapitalize="none" 
             onChangeText= {email => this.setState({ email })} 
             value = {this.state.email}/>
@@ -62,9 +64,31 @@ export default class LoginScreen extends React.Component{
             <TouchableOpacity style={styles.button_login} onPress={this.handleLogin}>
                 <Text style={styles.btn_log}>Masuk</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button_reg} onPress={() => this.props.navigation.navigate('Register')}>
-                <Text style={styles.btn_log}>Daftar</Text>
+
+            <TouchableOpacity style={styles.button_login_google} onPress={this.handleLogin}>
+                <View style={styles.btn_log_google}>
+                    <View style={styles.text_log}>
+                        <Image style={styles.logo_google} source={Logo_google}></Image>
+                    </View>
+                    <View style={styles.text_log}>
+                        <Text>Masuk menggunakan akun google</Text>
+                    </View>
+                </View>
             </TouchableOpacity>
+
+            <View style={{flexDirection:'row', marginTop:10}}>
+                <View>
+                    <Text>Belum punya akun ? silahkan </Text>
+                </View>
+                <View>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Register')}>
+                        <Text style={{color:'blue'}}>Daftar disini</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+            {/* <TouchableOpacity style={styles.button_reg} onPress={() => this.props.navigation.navigate('Register')}>
+                <Text style={styles.btn_log}>Daftar</Text>
+            </TouchableOpacity> */}
             </View>
             </View>
         )
@@ -107,7 +131,8 @@ const styles = StyleSheet.create({
         height:50,
         borderColor: '#707070',
         borderWidth:0.5,
-        borderRadius:4
+        borderRadius:4,
+        fontSize:17
     },
     button_login:{
         width:327,
@@ -119,10 +144,24 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         
     },
+    button_login_google:{
+        width:327,
+        height: 50,
+        backgroundColor: 'white',
+        marginTop: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 4,
+        
+    },
     btn_log:{
         fontSize: 17,
         color: 'white',
         fontWeight: 'bold'
+    },
+    btn_log_google:{
+        fontSize: 12,
+        color: 'black',
     },
     button_reg:{
         width: 327,
@@ -135,5 +174,22 @@ const styles = StyleSheet.create({
     },
     error:{
         color: 'red'
+    },
+    btn_log_google:{
+        width: 327,
+        height: 50,
+        flexDirection:'row',
+        alignItems:'center',
+        justifyContent:'center',
+        borderWidth:1,
+        borderColor:'gainsboro',
+        borderRadius:4
+    },
+    logo_google:{
+        width:30,
+        height:30
+    },
+    text_log:{
+        margin:5
     }
     })

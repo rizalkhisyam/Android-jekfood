@@ -18,6 +18,8 @@ export default class HistoryScreen extends React.Component{
 
 const styles = StyleSheet.create({
     content:{
+        flex:1,
+        backgroundColor:'white',
         alignItems:'center'
     },
     nav:{

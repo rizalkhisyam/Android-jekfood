@@ -18,6 +18,7 @@ export default class PaymentScreen extends React.Component{
 const styles = StyleSheet.create({
     content:{
         flex:1,
+        backgroundColor:'white',
         alignItems:'center'
     },
     nav:{

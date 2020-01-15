@@ -2,12 +2,13 @@ import React from 'react';
 import { View, Text, StyleSheet,TouchableOpacity,Image} from 'react-native';
 import ToggleSwitch from 'toggle-switch-react-native';
 import Doodle from '../assets/doodle_jekfood.png';
-import Logo_store from '../assets/store_jekfood.png';
+import Logo_setting from '../assets/setting_logo.png';
+import Logo_store2 from '../assets/store_logo.png';
+import Logo_logout from '../assets/logout.png';
 import * as firebase from 'firebase';
 
 export default class ProfileScreen extends React.Component{
     
-
     signOutUser = () => {
         firebase.auth().signOut();
     }
@@ -21,18 +22,63 @@ export default class ProfileScreen extends React.Component{
                     <Text>Profile Screen</Text>
                 </View>
 
-                <View style={styles.resto_option}>
-                    <View style={styles.resto_name}>
-                        <Image source={Logo_store}></Image>
-                    </View>
-                    <View style={styles.resto_name}>
-                        <Text>Ayam Kaki Gunung</Text>
-                    </View>
+                <View style={styles.menu_food}>
+                        <View style={styles.menu_bar}>
+                        
+                            <View style={{flexDirection:'row', alignItems:'center'}}>
+                                <View style={styles.menu_button}>
+                                    <Image style={styles.img_1} source={Logo_store2}></Image>
+                                </View>
+                                <View>
+                                    <Text style={{fontWeight:'bold'}}>
+                                        Ayam Kaki Gunung
+                                    </Text>
+                                </View>
+                            </View>
+                        </View>
                 </View>
-
-                <TouchableOpacity onPress={this.signOutUser}>
-                <Text>Log Out</Text>
-                </TouchableOpacity>
+                <View style={styles.menu_food}>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('MenuSetting')}>
+                        <View style={styles.menu_bar}>
+                        
+                            <View style={{flexDirection:'row', alignItems:'center'}}>
+                                <View style={styles.menu_button}>
+                                    <Image style={styles.img_1} source={Logo_setting}></Image>
+                                </View>
+                                <View>
+                                    <Text style={{fontWeight:'bold'}}>
+                                        Ubah Informasi Restoran
+                                    </Text>
+                                    <Text style={{color:'#C1C0C0'}}>
+                                        Anda dapat mengubah informasi lapak{'\n'}
+                                        alamat dan nama restoran
+                                    </Text>
+                                </View>
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.menu_food}>
+                    <TouchableOpacity onPress={this.signOutUser}>
+                        <View style={styles.menu_bar}>
+                        
+                            <View style={{flexDirection:'row', alignItems:'center'}}>
+                                <View style={styles.menu_button}>
+                                    <Image style={styles.img_1} source={Logo_logout}></Image>
+                                </View>
+                                <View>
+                                    <Text style={{fontWeight:'bold'}}>
+                                        Logout
+                                    </Text>
+                                    <Text style={{color:'#C1C0C0'}}>
+                                        tombol untuk keluar akun anda
+                                    </Text>
+                                </View>
+                            </View>
+                        
+                        </View>
+                    </TouchableOpacity>
+                </View>
             </View>
         )
     }
@@ -41,6 +87,7 @@ export default class ProfileScreen extends React.Component{
 const styles = StyleSheet.create({
     content:{
         flex:1,
+        backgroundColor:'white',
         alignItems:'center',
     
     },
@@ -72,5 +119,32 @@ const styles = StyleSheet.create({
     },
     resto_name:{
         margin:10
+    },
+    menu_food:{
+        width:'100%',
+        backgroundColor:'white',
+        marginTop:2,
+    },
+    notif_order:{
+        width: '100%',
+        flexDirection:'column'
+    },
+    menu_bar:{
+
+    },
+    img_1:{
+        width:45,
+        height:45
+    },
+    menu_button:{
+        margin:20
+    },
+    logout:{
+        width:'100%',
+        height:70,
+        backgroundColor:'white',
+        marginTop:5,
+        alignItems:'center',
+        justifyContent:'center'
     }
 })

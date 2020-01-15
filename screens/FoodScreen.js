@@ -93,6 +93,8 @@ export default class FoodScreen extends React.Component{
 
 const styles = StyleSheet.create({
     content:{
+        flex:1,
+        backgroundColor:'white',
         alignItems:'center'
     },
     nav:{

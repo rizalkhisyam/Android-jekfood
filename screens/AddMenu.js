@@ -10,7 +10,7 @@ import * as ImagePicker from 'expo-image-picker';
 const firebase = require('firebase');
 require('firebase/firestore');
 
-export default class HistoryScreen extends React.Component{
+export default class AddMenu extends React.Component{
 
     // state = {
     //     text:'',
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#F5FCFF',
     },
     textarea: {
-        textAlignVertical: 'top',  // hack android
+        textAlignVertical: 'top',
         height: 170,
         fontSize: 14,
         color: '#333',

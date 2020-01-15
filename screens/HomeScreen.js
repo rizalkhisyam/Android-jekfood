@@ -109,6 +109,8 @@ export default class HomeScreen extends React.Component{
 const styles = StyleSheet.create({
     content:{
         alignItems: 'center',
+        backgroundColor:'white',
+        flex:1
     },
     doodle_img:{
         position:'absolute',
