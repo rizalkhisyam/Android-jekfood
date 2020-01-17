@@ -9,7 +9,7 @@ export default class PaymentScreen extends React.Component{
                 <View style={styles.nav}>
                     <Text style={{marginTop:35, fontWeight:'bold'}}>Pembayaran</Text>
                 </View>
-                <Text>Payment Screen</Text>
+                
             </View>
         )
     }

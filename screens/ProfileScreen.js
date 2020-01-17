@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet,TouchableOpacity,Image} from 'react-native';
+import { View, Text, StyleSheet,TouchableOpacity,Image,Switch,SafeAreaView} from 'react-native';
 import ToggleSwitch from 'toggle-switch-react-native';
 import Doodle from '../assets/doodle_jekfood.png';
 import Logo_setting from '../assets/setting_logo.png';
@@ -9,13 +9,17 @@ import * as firebase from 'firebase';
 
 export default class ProfileScreen extends React.Component{
     
+    state = {
+        switchValue:true
+    };
+
     signOutUser = () => {
         firebase.auth().signOut();
     }
 
     render(){
         return(
-            <View style={styles.content}>
+            <SafeAreaView style={styles.content}>
                 <Image resizeMode={'cover'} source={Doodle} style={styles.doodle_img}></Image>
 
                 <View style={styles.profile_banner}>
@@ -29,16 +33,22 @@ export default class ProfileScreen extends React.Component{
                                 <View style={styles.menu_button}>
                                     <Image style={styles.img_1} source={Logo_store2}></Image>
                                 </View>
-                                <View>
+                                <View style={{width:'60%'}}>
                                     <Text style={{fontWeight:'bold'}}>
                                         Ayam Kaki Gunung
                                     </Text>
+                                </View>
+                                <View>
+                                    <Switch
+                                    onValueChange={(switchValue) => this.setState({switchValue})}
+                                    value={this.state.switchValue}
+                                    />
                                 </View>
                             </View>
                         </View>
                 </View>
                 <View style={styles.menu_food}>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('MenuSetting')}>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('UpdateResto')}>
                         <View style={styles.menu_bar}>
                         
                             <View style={{flexDirection:'row', alignItems:'center'}}>
@@ -75,11 +85,10 @@ export default class ProfileScreen extends React.Component{
                                     </Text>
                                 </View>
                             </View>
-                        
                         </View>
                     </TouchableOpacity>
                 </View>
-            </View>
+            </SafeAreaView>
         )
     }
 }

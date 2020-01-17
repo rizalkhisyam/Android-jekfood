@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image, TextInput} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Textarea from 'react-native-textarea';
+import prev_img from '../assets/prev_image.png';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import Fire from '../Fire';
@@ -83,7 +84,6 @@ export default class AddMenu extends React.Component{
                         <Text style={{fontWeight:'bold'}}>Tambah Menu</Text>
                     </TouchableOpacity>
                 </View>
-
                 <View style={styles.input_content}>
                     <View>
                         <Text style={styles.label_email}>Nama Makanan</Text>
@@ -91,7 +91,7 @@ export default class AddMenu extends React.Component{
 
                     <TextInput 
                     style={styles.inputan}
-                    placeholder='Masukkan nama makanan'
+                    placeholder=' Masukkan nama makanan'
                     onChangeText={food => this.setState({ food })}
                     value={this.state.text} 
                     autoCapitalize="none"/>
@@ -102,7 +102,7 @@ export default class AddMenu extends React.Component{
 
                     <TextInput 
                     style={styles.inputan}
-                    placeholder='Masukkan harga makanan'
+                    placeholder=' Masukkan harga makanan'
                     onChangeText={price => this.setState({ price })}
                     value={this.state.price} 
                     autoCapitalize="none"/>
@@ -122,7 +122,7 @@ export default class AddMenu extends React.Component{
                         underlineColorAndroid={'transparent'}
                     />
 
-                    {/* <View>
+                    <View>
                         <Text style={styles.label_email}>Upload Foto Makanan</Text>
                     </View>
 
@@ -138,9 +138,13 @@ export default class AddMenu extends React.Component{
                         
                     </TouchableOpacity>
 
-                    <View style={{marginHorizontal:32}}>
+                    {/* <View style={{marginHorizontal:32}}>
                         <Image source={{uri:this.state.image}} style={styles.prev_img}></Image>
                     </View> */}
+                </View>
+
+                <View style={{alignItems:'center'}}>
+                    <Image style={styles.img_prev} source={prev_img}></Image>
                 </View>
 
                 <TouchableOpacity style={styles.button_done} onPress={this.handlePost}>
@@ -153,7 +157,8 @@ export default class AddMenu extends React.Component{
 
 const styles = StyleSheet.create({
     content:{
-        flex:1
+        flex:1,
+        backgroundColor:'white'
     },
     header:{
         marginTop:30,
@@ -173,7 +178,8 @@ const styles = StyleSheet.create({
     label_email:{
         marginTop:10,
         fontWeight:'bold',
-        marginLeft:-164
+        marginLeft:-164,
+        marginBottom:5
     },
     inputan:{
         width:327,
@@ -200,21 +206,27 @@ const styles = StyleSheet.create({
         alignItems:'center',
         width:327,
         height: 50,
-        backgroundColor:'gray'
+        backgroundColor:'gray',
+        borderRadius:4
     },
     img_up:{
         margin:10
     },
     button_done:{
+        position:'relative',
         width:'100%',
         height:50,
         backgroundColor:'#FEC84B',
         justifyContent:'center',
         alignItems:'center',
-        marginTop:140
+        marginBottom:0
     },
-    prev_img:{
-        width:40,
-        height:40
+    img_prev:{
+        marginTop:10,
+        width:227,
+        height:150,
+        marginBottom:5,
+        alignItems:'center'
     }
+
 })

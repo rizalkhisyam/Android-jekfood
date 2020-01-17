@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, Image, LayoutAnimation, ScrollView, TouchableOp
 import Doodle from '../assets/doodle_jekfood.png';
 import Logo_store from '../assets/store_jekfood.png';
 import Notif from '../assets/Notif_order.png';
-import Logo_order from '../assets/order_logo.png';
 
 import * as firebase from 'firebase';
 
@@ -25,7 +24,7 @@ export default class HomeScreen extends React.Component{
     }
     componentWillUnmount() {
         this._isMounted = false;
-      }
+    }
 
     render(){
         LayoutAnimation.easeInEaseOut();
@@ -100,7 +99,6 @@ export default class HomeScreen extends React.Component{
                 </View>
                 </View>
             </View>
-
         </View>
         )
     }
@@ -125,7 +123,6 @@ const styles = StyleSheet.create({
         height:200,
         backgroundColor:'white',
         borderRadius: 4,
-        opacity:0.9,
         marginTop:22,
         shadowColor: '#000',
         shadowOffset: {width: 0, height:4},

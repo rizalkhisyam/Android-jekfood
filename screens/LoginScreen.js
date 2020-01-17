@@ -3,9 +3,73 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput } from 'reac
 import Logo from '../assets/Logo_orange.png';
 import Logo_google from '../assets/logo_google.png';
 import * as firebase from 'firebase';
+import * as Google from 'expo-google-app-auth';
 
 export default class LoginScreen extends React.Component{
     static navigationOptions = {headerShown:false};
+
+    isUserEqual = (googleUser, firebaseUser) => {
+        if (firebaseUser) {
+          var providerData = firebaseUser.providerData;
+          for (var i = 0; i < providerData.length; i++) {
+            if (providerData[i].providerId === firebase.auth.GoogleAuthProvider.PROVIDER_ID &&
+                providerData[i].uid === googleUser.getBasicProfile().getId()) {
+              // We don't need to reauth the Firebase connection.
+              return true;
+            }
+          }
+        }
+        return false;
+      }
+
+    onSignIn = googleUser => {
+        console.log('Google Auth Response', googleUser);
+        // We need to register an Observer on Firebase Auth to make sure auth is initialized.
+        var unsubscribe = firebase.auth().onAuthStateChanged(function(firebaseUser) {
+          unsubscribe();
+          // Check if we are already signed-in Firebase with the correct user.
+          if (!this.isUserEqual(googleUser, firebaseUser)) {
+            // Build Firebase credential with the Google ID token.
+            var credential = firebase.auth.GoogleAuthProvider.credential(
+                googleUser.idToken,
+                googleUser.accessToken
+            )
+            // Sign in with credential from the Google user.
+            firebase.auth().signInWithCredential(credential).catch(function(error) {
+              // Handle Errors here.
+              var errorCode = error.code;
+              var errorMessage = error.message;
+              // The email of the user's account used.
+              var email = error.email;
+              // The firebase.auth.AuthCredential type that was used.
+              var credential = error.credential;
+              // ...
+            });
+          } else {
+            console.log('User already signed-in Firebase.');
+          }
+        }.
+        bind(this));
+      }
+
+    signInWithGoogleAsync = async () => {
+        try {
+            const result = await Google.logInAsync({
+            androidClientId: '1060042604495-imetgp9ejmb1cmdmr9cfpr9jan7fptnp.apps.googleusercontent.com',
+            // iosClientId: YOUR_CLIENT_ID_HERE,
+            scopes: ['profile', 'email'],
+            });
+            if (result.type === 'success') {
+                this.onSignIn(result)
+                return result.accessToken;
+            } else {
+                return { cancelled: true };
+            }
+        } catch (e) {
+        return { error: true };
+        }
+    }
+
     state = {
         email: "",
         password: "",
@@ -14,7 +78,7 @@ export default class LoginScreen extends React.Component{
 
     handleLogin = () => {
         const {email,password} = this.state;
-        
+
         firebase
         .auth()
         .signInWithEmailAndPassword(email,password)
@@ -65,7 +129,7 @@ export default class LoginScreen extends React.Component{
                 <Text style={styles.btn_log}>Masuk</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button_login_google} onPress={this.handleLogin}>
+            <TouchableOpacity style={styles.button_login_google} onPress={() => this.signInWithGoogleAsync()}>
                 <View style={styles.btn_log_google}>
                     <View style={styles.text_log}>
                         <Image style={styles.logo_google} source={Logo_google}></Image>

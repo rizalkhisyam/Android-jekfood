@@ -18,6 +18,8 @@ import HistoryScreen from './screens/HistoryScreen';
 import MenuSetting from './screens/MenuSetting';
 import ServMenu from './screens/ServMenu';
 import AddMenu from './screens/AddMenu';
+import UpdateResto from './screens/UpdateResto';
+import MapAddress from './screens/MapAddress';
 
 import * as firebase from 'firebase';
 
@@ -31,7 +33,7 @@ var firebaseConfig = {
   appId: "1:1060042604495:web:98fb3ebe6f45e571e6dcba",
   measurementId: "G-0RKVP2D71T"
 };
-// Initialize Firebase
+
 !firebase.apps.length ? firebase.initializeApp(firebaseConfig) : firebase.app();
 
 const AppContainer = createStackNavigator({
@@ -67,7 +69,8 @@ const AppContainer = createStackNavigator({
               tabBarIcon: ({ tintColor }) => <Ionicons name="ios-settings" size={24} color={tintColor}></Ionicons>
             }
           }
-        },{
+        },
+        {
           defaultNavigationOptions:{
           tabBarOnPress:({ navigation, defaultHandler}) => {
             if(navigation.state.key === 'Menu'){
@@ -90,8 +93,16 @@ const AppContainer = createStackNavigator({
         },
         AddMenu:{
           screen:AddMenu
+        },
+        UpdateResto:{
+          screen:UpdateResto
+        },
+        MapAddress:{
+          screen:MapAddress
         }
-      },{
+      },
+      
+      {
         mode:'modal',
         headerMode:'none'
       }
