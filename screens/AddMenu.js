@@ -1,77 +1,68 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image, TextInput} from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image, TextInput, Alert, YellowBox} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Textarea from 'react-native-textarea';
-import prev_img from '../assets/prev_image.png';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import Fire from '../Fire';
 import * as ImagePicker from 'expo-image-picker';
+import _ from 'lodash';
 
-const firebase = require('firebase');
-require('firebase/firestore');
+YellowBox.ignoreWarnings(['Setting a timer']);
+const _console = _.clone(console);
+console.warn = message => {
+    if (message.indexOf('Setting a timer') <= -1) {
+        _console.warn(message);
+    }
+};
 
 export default class AddMenu extends React.Component{
-
-    // state = {
-    //     text:'',
-    //     price:'',
-    //     description:'',
-    //     image: null
-    // };
 
     state = {
         food:'',
         price:'',
-        descript:''
+        description:'',
+        image: null
     };
 
-    // componentDidMount(){
-    //     this.getPhotoPermissions();
-    // }
+    componentDidMount(){
+        this.getPhotoPermissions();
+    }
 
-    // getPhotoPermissions = async () => {
-    //     if (Constants.platform.android){
-    //         const {status} = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    getPhotoPermissions = async () => {
+        if (Constants.platform.android){
+            const {status} = await Permissions.askAsync(Permissions.CAMERA_ROLL);
         
-    //         if(status != 'granted'){
-    //             alert('We need permisssions to access your camera roll')
-    //         }
-    //     }
-    // };
+            if(status != 'granted'){
+                alert('We need permisssions to access your camera roll')
+            }
+        }
+    };
 
-    // handlePost = () => {
-    //     Fire.shared.addPost({text:this.state.text.trim(),price:this.state.price.trim(),description:this.state.description.trim(), loaclUri: this.state.image })
-    //         .then( ref => {
-    //             this.setState({ text: '',price:'',description:'', image:null});
-                
-    //         })
-    //         .catch(error => {
-    //             alert(error);
-    //         })
-    // }
-
-        handlePost = () => {
-            Fire.shared.addPost({food:this.state.food.trim(),price:this.state.price.trim(),descript:this.state.descript.trim()})
+    handlePost = () => {
+        Fire.shared.addPost({food:this.state.food.trim(),price:this.state.price.trim(),descript:this.state.descript.trim(), localUri: this.state.image })
             .then( ref => {
-                this.setState({ text: '',price:'',description:'', image:null});
+                this.setState({ food:'',price:'',descript:'', image:null});
+                this.props.navigation.navigate('ServMenu');
+                
             })
             .catch(error => {
-            alert(error);
+                alert(error);
             })
+        
+    }
+
+    pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing:true,
+            aspect:[4,3]
+        });
+
+        if(!result.cancelled){
+            this.setState({image: result.uri});
         }
-
-    // pickImage = async () => {
-    //     let result = await ImagePicker.launchImageLibraryAsync({
-    //         mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //         allowsEditing:true,
-    //         aspect:[4,3]
-    //     });
-
-    //     if(!result.cancelled){
-    //         this.setState({image: result.uri});
-    //     }
-    // }
+    }
 
     render(){
         return(
@@ -93,7 +84,7 @@ export default class AddMenu extends React.Component{
                     style={styles.inputan}
                     placeholder=' Masukkan nama makanan'
                     onChangeText={food => this.setState({ food })}
-                    value={this.state.text} 
+                    value={this.state.food} 
                     autoCapitalize="none"/>
 
                     <View>
@@ -104,6 +95,7 @@ export default class AddMenu extends React.Component{
                     style={styles.inputan}
                     placeholder=' Masukkan harga makanan'
                     onChangeText={price => this.setState({ price })}
+                    keyboardType={'numeric'}
                     value={this.state.price} 
                     autoCapitalize="none"/>
 
@@ -117,7 +109,7 @@ export default class AddMenu extends React.Component{
                         maxLength={100}
                         placeholder={'Deskripsikan menu makanan anda'}
                         onChangeText={descript => this.setState({ descript })}
-                        value={this.state.description}
+                        value={this.state.descript}
                         placeholderTextColor={'#c7c7c7'}
                         underlineColorAndroid={'transparent'}
                     />
@@ -137,14 +129,10 @@ export default class AddMenu extends React.Component{
                         </View>
                         
                     </TouchableOpacity>
-
-                    {/* <View style={{marginHorizontal:32}}>
-                        <Image source={{uri:this.state.image}} style={styles.prev_img}></Image>
-                    </View> */}
                 </View>
 
                 <View style={{alignItems:'center'}}>
-                    <Image style={styles.img_prev} source={prev_img}></Image>
+                    <Image style={styles.img_prev} source={{uri:this.state.image}}></Image>
                 </View>
 
                 <TouchableOpacity style={styles.button_done} onPress={this.handlePost}>

@@ -1,17 +1,71 @@
 import React from 'react';
-import { View, Text, StyleSheet,TouchableOpacity,Image,Switch,SafeAreaView} from 'react-native';
-import ToggleSwitch from 'toggle-switch-react-native';
+import { View, Text, StyleSheet,TouchableOpacity,Image,Switch,SafeAreaView, YellowBox} from 'react-native';
 import Doodle from '../assets/doodle_jekfood.png';
 import Logo_setting from '../assets/setting_logo.png';
 import Logo_store2 from '../assets/store_logo.png';
 import Logo_logout from '../assets/logout.png';
 import * as firebase from 'firebase';
+import _ from 'lodash';
+
+YellowBox.ignoreWarnings(['Setting a timer']);
+const _console = _.clone(console);
+console.warn = message => {
+    if (message.indexOf('Setting a timer') <= -1) {
+        _console.warn(message);
+    }
+};
+
 
 export default class ProfileScreen extends React.Component{
     
     state = {
-        switchValue:true
+        switchValue:true,
+        resto_name:'',
+        status:null,
+        id_resto:''
     };
+
+    componentDidMount(){
+        this.readRestoName();
+    }
+
+    readRestoName(){
+        firebase.database().ref('Jekfood/Users/'+firebase.auth().currentUser.uid+'/Restaurant')
+        .on('value', snapshot => 
+        {
+            console.log(snapshot.val())
+            const data = snapshot.val();
+            this.setState({data});
+            this.resto_name = data.resto_name
+            this.status = data.status_resto
+            this.id_resto = data.idResto
+
+        })
+    }
+
+    toggleSwitch(value){
+        const userData = {
+            status_resto: value
+        }
+        firebase.database().ref('Jekfood/Users/'+firebase.auth().currentUser.uid+'/Restaurant').update({ ...userData})
+        this.setState({status: value})
+    }
+
+    button(){
+        Alert.alert(
+            'Alert Title',
+            'My Alert Msg',
+            [                
+                {
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+                },
+                {text: 'OK', onPress: () => console.log('OK Pressed')},
+            ],
+            {cancelable: false},
+        );
+    }
 
     signOutUser = () => {
         firebase.auth().signOut();
@@ -35,13 +89,13 @@ export default class ProfileScreen extends React.Component{
                                 </View>
                                 <View style={{width:'60%'}}>
                                     <Text style={{fontWeight:'bold'}}>
-                                        Ayam Kaki Gunung
+                                        {this.resto_name}
                                     </Text>
                                 </View>
                                 <View>
                                     <Switch
-                                    onValueChange={(switchValue) => this.setState({switchValue})}
-                                    value={this.state.switchValue}
+                                    onValueChange={(value) => this.toggleSwitch(value) }
+                                    value={this.status}
                                     />
                                 </View>
                             </View>

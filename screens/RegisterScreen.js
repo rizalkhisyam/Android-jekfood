@@ -8,6 +8,8 @@ export default class RegisterScreen extends React.Component{
     state = {
         name:"",
         email: "",
+        nama_resto:'',
+        alamat:0,
         password: "",
         errorMessage: null
     };

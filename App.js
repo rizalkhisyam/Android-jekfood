@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
+import {View} from 'react-native';
 import { createStackNavigator} from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { Ionicons } from '@expo/vector-icons';
@@ -20,6 +21,7 @@ import ServMenu from './screens/ServMenu';
 import AddMenu from './screens/AddMenu';
 import UpdateResto from './screens/UpdateResto';
 import MapAddress from './screens/MapAddress';
+import EditFood from './screens/EditFood';
 
 import * as firebase from 'firebase';
 
@@ -54,7 +56,12 @@ const AppContainer = createStackNavigator({
           Makanan:{
             screen:FoodScreen,
             navigationOptions:{
-              tabBarIcon: ({ tintColor }) => <Ionicons name="ios-restaurant" size={24} color={tintColor}></Ionicons>
+              tabBarIcon: ({ tintColor }) =>
+              <Ionicons name="md-restaurant" 
+              size={24} 
+              color={tintColor}>
+
+              </Ionicons>
             }
           },
           Pembayaran:{
@@ -81,7 +88,7 @@ const AppContainer = createStackNavigator({
           }
           },
           tabBarOptions:{
-            activeTintColor:'#FEC84B'
+            activeTintColor:'black'
           }
         }
         ),
@@ -99,6 +106,9 @@ const AppContainer = createStackNavigator({
         },
         MapAddress:{
           screen:MapAddress
+        },
+        EditFood:{
+          screen:EditFood
         }
       },
       

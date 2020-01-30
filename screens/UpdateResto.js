@@ -1,64 +1,74 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, TextInput, Platform} from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, TextInput} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import Fire from '../Fire';
+import * as firebase from 'firebase';
+// import Fire from '../Fire';
 
-import Constants from 'expo-constants';
-import * as Location from 'expo-location';
-import * as Permissions from 'expo-permissions';
+// import Constants from 'expo-constants';
+// import * as Location from 'expo-location';
+// import * as Permissions from 'expo-permissions';
 
-const firebase = require('firebase');
-require('firebase/firestore');
 
 export default class UpdateResto extends React.Component{
 
     state = {
-        food:'',
-        price:'',
+        resto_name:'',
         descript:'',
-        location: null,
+        info:'',
+        location:0,
+        idResto:'',
+        restoStatus:null,
         errorMessage: null
     };
 
-        handlePost = () => {
-            Fire.shared.addPost({food:this.state.food.trim(),price:this.state.price.trim(),descript:this.state.descript.trim()})
-            .then( ref => {
-                this.setState({ text: '',price:'',description:'', image:null});
-            })
-            .catch(error => {
-            alert(error);
-            })
-        }
 
-        componentDidMount() {
-            if (Platform.OS === 'android' && !Constants.isDevice) {
-                this.setState({
-                errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
-                });
-            } else {
-                this._getLocationAsync();
-            }
+    get uid(){
+        return (firebase.auth().currentUser || {}).uid;
+    }
+
+    get timestamp(){
+        return Date.now();
+    }
+
+    handleUpResto(){
+            firebase.database().ref('Jekfood/Users/'+firebase.auth().currentUser.uid+'/Restaurant').set({
+                idResto:this.uid,
+                resto_name: this.state.resto_name,
+                location: this.state.location,
+                status_resto:true,
+                timestamp:this.timestamp
+                
+            })
         }
+        // componentDidMount() {
+        //     if (Platform.OS === 'android' && !Constants.isDevice) {
+        //         this.setState({
+        //         errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
+        //         });
+        //     } else {
+        //         this._getLocationAsync();
+        //     }
+        // }
         
-        _getLocationAsync = async () => {
-            let { status } = await Permissions.askAsync(Permissions.LOCATION);
-            if (status !== 'granted') {
-                this.setState({
-                errorMessage: 'Permission to access location was denied',
-                });
-            }
+        // _getLocationAsync = async () => {
+        //     let { status } = await Permissions.askAsync(Permissions.LOCATION);
+        //     if (status !== 'granted') {
+        //         this.setState({
+        //         errorMessage: 'Permission to access location was denied',
+        //         });
+        //     }
         
-            let location = await Location.getCurrentPositionAsync({});
-            this.setState({ location });
-        };
+        //     let location = await Location.getCurrentPositionAsync({});
+        //     this.setState({ location });
+        // };
 
     render(){
-        let text = 'Waiting..';
-        if (this.state.errorMessage) {
-            text = this.state.errorMessage;
-        } else if (this.state.location) {
-            text = JSON.stringify(this.state.location);
-        }
+        // let text = 'Waiting..';
+        // if (this.state.errorMessage) {
+        //     text = this.state.errorMessage;
+        // } else if (this.state.location) {
+        //     text = JSON.stringify(this.state.location);
+        // }
         return(
             <SafeAreaView style={styles.content}>
                 <View style={styles.header}>
@@ -76,9 +86,8 @@ export default class UpdateResto extends React.Component{
                     <TextInput 
                     style={styles.inputan}
                     placeholder=' Masukkan nama restoran anda'
-                    onChangeText={food => this.setState({ food })}
-                    value={this.state.text} 
-                    autoCapitalize="none"/>
+                    onChangeText={resto_name => this.setState({ resto_name })}
+                    />
 
                     <View>
                         <Text style={styles.label_email}>Alamat Restoran</Text>
@@ -89,9 +98,14 @@ export default class UpdateResto extends React.Component{
                         </Text>
                         
                     </TouchableOpacity>
-                        <Text>
+
+                    <TouchableOpacity style={styles.button_update} onPress={()=>this.handleUpResto()}>
+                        <Text>Update</Text>
+                    </TouchableOpacity>
+                    
+                        {/* <Text>
                             {text}
-                        </Text>
+                        </Text> */}
                 </View>
 
             </SafeAreaView>
@@ -138,4 +152,13 @@ const styles = StyleSheet.create({
         padding: 5,
         backgroundColor: '#F5FCFF',
     },
+    button_update:{
+        marginTop:100,
+        width:327,
+        height:50,
+        backgroundColor:'gainsboro',
+        justifyContent:'center',
+        alignItems:'center',
+        borderRadius:4
+    }
 })

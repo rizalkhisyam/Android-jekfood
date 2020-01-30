@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, LayoutAnimation, ScrollView, TouchableOpacity } from 'react-native';
-import Doodle from '../assets/doodle_jekfood.png';
+import { View, Text, StyleSheet, Image, LayoutAnimation, ScrollView, TouchableOpacity, FlatList } from 'react-native';
+import Doodle from '../assets/bg_jekfood.png';
 import Logo_store from '../assets/store_jekfood.png';
 import Notif from '../assets/Notif_order.png';
+import Food from '../assets/food_img.png';
 
 import * as firebase from 'firebase';
 
@@ -12,7 +13,12 @@ export default class HomeScreen extends React.Component{
 
     state = {
         email:"",
-        displayName:""
+        resto:[],
+        displayName:"",
+        setVisible:null,
+        status:null,
+        status_resto:null,
+        isOpen:null
     }
 
     componentDidMount(){
@@ -20,8 +26,53 @@ export default class HomeScreen extends React.Component{
         const {email,displayName} = firebase.auth().currentUser
         if(this._isMounted){
             this.setState({ email, displayName });
+            this.readRestoName();
+            this.readPesanan();
+            this.checkStatus();
         }
     }
+
+    readRestoName(){
+        firebase.database().ref('Jekfood/Users/'+firebase.auth().currentUser.uid+'/Restaurant')
+        .on('value', snapshot => 
+        {
+            console.log(snapshot.val())
+            const data = snapshot.val();
+            this.setState({data});
+            this.resto_name=data.resto_name
+        })
+    }
+
+    readPesanan(){
+        firebase.database().ref('Jekfood/Pesanan').on('value', snapshot =>
+        {
+            console.log(snapshot.val())
+            const data = snapshot.val();
+            this.setState({data});
+            this.state.status=data.status
+            if(data !== null && this.state.status === true){
+                this.setState({setVisible: true})
+            }else{
+                this.setState({setVisible:false})
+            }
+        })
+    }
+
+    checkStatus(){
+        firebase.database().ref('Jekfood/Users/'+firebase.auth().currentUser.uid+'/Restaurant')
+        .on('value', snap =>{
+            const data = snap.val();
+            this.setState({data});
+            this.status_resto = data.status_resto
+            console.log("ini status resto",this.status_resto)
+            if(this.status_resto === true){
+                this.setState({isOpen: true})
+            }else{
+                this.setState({isOpen: false})
+            }
+        })
+    }
+
     componentWillUnmount() {
         this._isMounted = false;
     }
@@ -32,28 +83,42 @@ export default class HomeScreen extends React.Component{
         <View style={styles.content}>
             
             <Image resizeMode={'cover'} source={Doodle} style={styles.doodle_img}></Image>
-            <Text  style={styles.name_user}> Halo, {this.state.displayName}! </Text>
+
             
-            <View style={styles.menu_user}>
-                <View style={styles.resto}>
 
-                    <View>
-                        <Image source={Logo_store}></Image>
-                    </View>
-
-                    <View>
-                        <Text style={styles.resto_name}>Ayam Kaki Gunung</Text>
-                    </View>
-
-                </View>
-
-                <View style={styles.operation}>
-                    <Text>Buka</Text>
-                </View>
+            <View style={styles.food_img}>
+                <Image style={{width:233, height:233}} source={Food}>
+                </Image>
             </View>
+
+            <View style={styles.yourName}>
+            <Text  style={styles.name_user}> Halo,</Text>
+            <Text  style={styles.displayName}>{this.state.displayName}</Text>
+            </View>
+
+            <View style={styles.menu_user}>
+                    <View style={styles.resto}>
+    
+                        <View>
+                            <Image source={Logo_store}></Image>
+                        </View>
+                        <View style={{margin:3}}>
+                            <Text style={styles.resto_name}>{this.resto_name}</Text>
+                        </View>           
+                    </View>
+                    <View style={styles.operation}>
+                        {this.state.isOpen ? 
+                            <Text>Buka</Text> : <Text style={{color:'red'}}>Tutup</Text>
+                        }
+                        
+                    </View>
+                </View>
+
             <View style={styles.order}>
                 <Text style={styles.order_title}>Pesanan Hari Ini</Text>
-
+            <View>
+            </View>
+            {this.state.setVisible ?
                 <View style={styles.notif_order}>
                 <View style={styles.menu_food}>
                     <TouchableOpacity onPress={() => this.props.navigation.navigate('MenuSetting')}>
@@ -76,28 +141,10 @@ export default class HomeScreen extends React.Component{
                         </View>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.menu_food}>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('MenuSetting')}>
-                        <View style={styles.menu_bar}>
-                        
-                            <View style={{flexDirection:'row', alignItems:'center'}}>
-                                <View style={styles.menu_button}>
-                                    <Image style={styles.img_1} source={Notif}></Image>
-                                </View>
-                                <View>
-                                    <Text style={{fontWeight:'bold'}}>
-                                        Nama Driver Jekfood
-                                    </Text>
-                                    <Text style={{color:'#C1C0C0'}}>
-                                        2 menit yang lalu
-                                    </Text>
-                                </View>
-                            </View>
-                        
-                        </View>
-                    </TouchableOpacity>
                 </View>
-                </View>
+                :
+                <View><Text>tidak ada</Text></View>
+            }
             </View>
         </View>
         )
@@ -115,15 +162,23 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     name_user:{
-        fontSize: 23,
-        marginTop: 20
+        fontSize: 30,
+        marginTop: 20,
+        marginLeft:-7,
+        fontWeight:'bold',
+        color:'white'
     },
+    displayName:{
+        color:'white',
+        fontSize:20
+    }
+    ,
     menu_user:{
-        width:350,
-        height:200,
+        width:320,
+        height:64,
         backgroundColor:'white',
-        borderRadius: 4,
-        marginTop:22,
+        borderRadius: 11,
+        marginTop:75,
         shadowColor: '#000',
         shadowOffset: {width: 0, height:4},
         shadowOpacity:0.8,
@@ -196,5 +251,14 @@ const styles = StyleSheet.create({
     },
     menu_button:{
         margin:20
+    },
+    food_img:{
+        marginTop:80,
+        marginRight:-310
+    },
+    yourName:{
+        marginLeft:-210,
+        marginTop:-150
     }
+
 })

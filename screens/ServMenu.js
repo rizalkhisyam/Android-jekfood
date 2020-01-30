@@ -1,30 +1,68 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image, Switch} from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image, Switch, FlatList, YellowBox} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import Fire from '../Fire';
-import setting_menu from '../assets/pict_food.png';
-
-const firebase = require('firebase');
-require('firebase/firestore');
+import * as firebase from 'firebase';
 
 export default class ServMenu extends React.Component{
+    constructor(props){
+        super(props);
 
-    state = {
-        food:'',
-        price:'',
-        descript:'',
-        switchValue:false
-    };
+        this.state = {
+            postt:'',
+            price:'',
+            descript:'',
+            switchValue:null,
+            post:[]
+        };
 
-        handlePost = () => {
-            Fire.shared.addPost({food:this.state.food.trim(),price:this.state.price.trim(),descript:this.state.descript.trim()})
-            .then( ref => {
-                this.setState({ text: '',price:'',description:'', image:null});
+        // this.readUserData = this.readUserData.bind(this);
+        this.getItem = this.getItem.bind(this);
+    }
+
+    componentDidMount(){
+        this.getItem();
+    }
+
+    // readUserData = () => {
+    //     firebase
+    //     .database()
+    //     .ref('Jekfood/Users/'+firebase.auth().currentUser.uid+'/PostFood')
+    //     .on("child_added", snapshot => {
+    //         const data = snapshot.val();
+    //         if (data) {
+    //             this.setState(prevState => ({
+    //             post: [data, ...prevState.post]
+    //             }))
+    //         }
+    //     })
+    // }
+
+    getItem(){
+        const getI = firebase.database().ref('Jekfood/Users/'+firebase.auth().currentUser.uid+'/PostFood')
+        getI.on('value',(snapshot)=>{
+            let item =[];
+            snapshot.forEach((child)=>{
+                item.push({
+                    id:child.key,
+                    food:child.val().food,
+                    descript:child.val().descript,
+                    price:child.val().price,
+                    status:child.val().switchValue,
+                    image:child.val().image
+                })
             })
-            .catch(error => {
-            alert(error);
-            })
+            this.setState({post: item });
+        })
+    }
+
+    keyExtractor = (item) => item.id;
+
+    setValue(){
+        if(this.state.switchValue == true){
+            firebase.database().ref('Jekfood/Users/'+firebase.auth().currentUser.uid+'/PostFood/')
         }
+    }
+
 
     render(){
         return(
@@ -37,30 +75,40 @@ export default class ServMenu extends React.Component{
                         <Text style={{fontWeight:'bold'}}>Ketersediaan Menu</Text>
                     </TouchableOpacity>
                 </View>
-
-                <View style={styles.menu_food}>
+                
+                <FlatList
+                data={this.state.post}
+                keyExtractor={this.keyExtractor}
+                renderItem={({item}) => {
+                    return(
+                    <View style={styles.menu_food}>
                         <View style={styles.menu_bar}>
                             <View style={{flexDirection:'row', alignItems:'center'}}>
                                 <View style={styles.menu_button}>
-                                    <Image style={styles.img_1} source={setting_menu}></Image>
+                                    <Image style={styles.img_1} source={item.image && {uri:item.image}}></Image>
                                 </View>
                                 <View style={{width:'60%'}}>
                                     <Text style={{fontWeight:'bold'}}>
-                                        Ayam Geprek Bumbu Mercon
+                                        {item.food}
                                     </Text>
                                     <Text>
-                                        Deskripsi Menu
+                                        {item.descript}
                                     </Text>
                                 </View>
                                 <View style={{}}>
                                     <Switch
                                     onValueChange={(switchValue) => this.setState({switchValue})}
-                                    value={this.state.switchValue}
+                                    value={item.status}
                                     />
                                 </View>
                             </View>
                         </View>
                 </View>
+                        )
+                }}
+                >
+                    
+                </FlatList>
             </SafeAreaView>
         )
     }

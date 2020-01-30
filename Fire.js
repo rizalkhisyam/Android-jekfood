@@ -1,58 +1,23 @@
 import * as firebase from 'firebase';
 
-var firebaseConfig = {
-    apiKey: "AIzaSyBqHAu_ywlwkAFqX228XY-ny0PbLNNagpo",
-    authDomain: "ojek-apps.firebaseapp.com",
-    databaseURL: "https://ojek-apps.firebaseio.com",
-    projectId: "ojek-apps",
-    storageBucket: "ojek-apps.appspot.com",
-    messagingSenderId: "1060042604495",
-    appId: "1:1060042604495:web:98fb3ebe6f45e571e6dcba",
-    measurementId: "G-0RKVP2D71T"
-  };
-
 class Fire{
-    constructor(){
-        firebase.initializeApp(firebaseConfig);
-    }
 
-    // addPost = async ({ text, price, description, localUri }) => {
-    //     const remoteUri = await this.uploadPhotoAsync(localUri);
-
-    //     return new Promise(
-    //         (res, rej) => {
-    //             this.firestore
-    //             .collection('post')
-    //             .add({
-    //                 text,
-    //                 price,
-    //                 description,
-    //                 uid:this.uid,
-    //                 timestamp:this.timestamp,
-    //                 image:remoteUri
-    //             })
-    //             .then(ref => {
-    //                 res(ref);
-    //             })
-    //             .catch(error => {
-    //                 rej(error);
-    //             })
-    //         }
-    //     )
-    // }
-
-    addPost = async ({ food, price, descript}) => {
+    addPost = async ({ food, price, descript, localUri}) => {
+        
+        const remoteUri = await this.uploadPhotoAsync(localUri);
 
         return new Promise(
             (res, rej) => {
-                this.firestore
-                .collection('post')
-                .add({
+                firebase.database()
+                .ref('Jekfood/Users/'+firebase.auth().currentUser.uid+'/PostFood')
+                .push({
                     food,
                     price,
                     descript,
                     uid:this.uid,
-                    timestamp:this.timestamp
+                    timestamp:this.timestamp,
+                    image:remoteUri,
+                    switchValue:true
                 })
                 .then(ref => {
                     res(ref);
@@ -64,33 +29,53 @@ class Fire{
         )
     }
 
-    // uploadPhotoAsync = async uri => {
-    //     const path = 'photos/${this.uid}/${Date.now()}.jpg'
+    updatePost = async ({ food, price, descript, localUri, id}) => {
+        
+        const remoteUri = await this.uploadPhotoAsync(localUri);
 
-    //     return new Promise(
+        return new Promise(
+            (res, rej) => {
 
-    //         async (res, rej) => {
-    //             const response = await fetch(uri)
-    //             const file = await response.blob()
+                firebase.database()
+                .ref('Jekfood/Users/'+firebase.auth().currentUser.uid+'/PostFood/'+id)
+                .update({
+                    food,
+                    price,
+                    descript,
+                    uid:this.uid,
+                    timestamp:this.timestamp,
+                    image:remoteUri,
+                    switchValue:true
+                })
+                .then(ref => {
+                    res(ref);
+                })
+                .catch(error => {
+                    rej(error);
+                })
+            }
+        )
+    }
 
-    //             let upload = firebase.storage().ref(path).put(file)
+    uploadPhotoAsync = async uri => {
 
-    //             upload.on('state_changed', snapshot => {}, err => {
-    //                 rej(err)
-    //             },
-    //             async() => {
-    //                 const url = await upload.snapshot.ref.getDownloadURL();
-    //                 res(url);
-    //             }
-                
-    //             )
-    //         }
+        const path = `photos/${this.uid}/${Date.now()}.jpg`
 
-    //     ) 
-    // }
+        return new Promise(async (res, rej) => {
+            const response = await fetch(uri)
+            const blob = await response.blob()
 
-    get firestore(){
-        return firebase.firestore();
+            let upload = firebase.storage().ref(path).put(blob)
+
+            upload.on('state_changed', snapshot => {}, err => {
+                rej(err)
+            },
+            async () => {
+                const url = await upload.snapshot.ref.getDownloadURL();
+                res(url);
+            })
+        })        
+
     }
 
     get uid(){
