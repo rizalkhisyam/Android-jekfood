@@ -18,7 +18,8 @@ export default class HomeScreen extends React.Component{
         setVisible:null,
         status:null,
         status_resto:null,
-        isOpen:null
+        isOpen:null,
+        restoVisible:null
     }
 
     componentDidMount(){
@@ -38,8 +39,12 @@ export default class HomeScreen extends React.Component{
         {
             console.log(snapshot.val())
             const data = snapshot.val();
-            this.setState({data});
-            this.resto_name=data.resto_name
+            if(data == null){
+                this.setState({restoVisible: true})
+            }else{
+                this.setState({data});
+                this.resto_name=data.resto_name
+            }
         })
     }
 
@@ -62,13 +67,28 @@ export default class HomeScreen extends React.Component{
         firebase.database().ref('Jekfood/Users/'+firebase.auth().currentUser.uid+'/Restaurant')
         .on('value', snap =>{
             const data = snap.val();
-            this.setState({data});
+            if(data !== null){
+                this.setState({data});
             this.status_resto = data.status_resto
             console.log("ini status resto",this.status_resto)
             if(this.status_resto === true){
                 this.setState({isOpen: true})
             }else{
                 this.setState({isOpen: false})
+            }
+            }else{
+                this.setState({status_resto:false})
+            }
+            
+        })
+    }
+
+    cekResto(){
+        firebase.database().ref('Jekfood/Users/'+firebase.auth().currentUser.uid+'/Restaurant')
+        .once('value', snap =>{
+            const data = snap.val();
+            if(data == null){
+                this.setState({restoVisible: true})
             }
         })
     }
@@ -102,17 +122,33 @@ export default class HomeScreen extends React.Component{
                         <View>
                             <Image source={Logo_store}></Image>
                         </View>
+                        {this.state.restoVisible ? 
                         <View style={{margin:3}}>
-                            <Text style={styles.resto_name}>{this.resto_name}</Text>
-                        </View>           
+                        <Text style={styles.resto_name}>Buat Restoran</Text>
+                        </View> 
+                        : 
+                        <View style={{margin:3}}>
+                        <Text style={styles.resto_name}>{this.resto_name}</Text>
+                        </View>
+                        }         
                     </View>
+                    
+                    {this.state.restoVisible ? 
+                    <View style={styles.operation}>
+                        <TouchableOpacity>
+                            <Text>Ubah</Text>
+                        </TouchableOpacity>
+                    </View>
+                    :
                     <View style={styles.operation}>
                         {this.state.isOpen ? 
                             <Text>Buka</Text> : <Text style={{color:'red'}}>Tutup</Text>
                         }
-                        
                     </View>
-                </View>
+                    }
+                    
+
+            </View>
 
             <View style={styles.order}>
                 <Text style={styles.order_title}>Pesanan Hari Ini</Text>

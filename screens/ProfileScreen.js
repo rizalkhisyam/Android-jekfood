@@ -22,7 +22,8 @@ export default class ProfileScreen extends React.Component{
         switchValue:true,
         resto_name:'',
         status:null,
-        id_resto:''
+        id_resto:'',
+        restoVisible:null
     };
 
     componentDidMount(){
@@ -35,10 +36,15 @@ export default class ProfileScreen extends React.Component{
         {
             console.log(snapshot.val())
             const data = snapshot.val();
-            this.setState({data});
-            this.resto_name = data.resto_name
-            this.status = data.status_resto
-            this.id_resto = data.idResto
+            if(data == null){
+                this.setState({restoVisible: true})
+            }else{
+                this.setState({data});
+                this.resto_name = data.resto_name
+                this.status = data.status_resto
+                this.id_resto = data.idResto
+            }
+
 
         })
     }
@@ -83,6 +89,21 @@ export default class ProfileScreen extends React.Component{
                 <View style={styles.menu_food}>
                         <View style={styles.menu_bar}>
                         
+                        {this.state.restoVisible ? 
+                        
+                        <View style={{flexDirection:'row', alignItems:'center'}}>
+                                <View style={styles.menu_button}>
+                                    <Image style={styles.img_1} source={Logo_store2}></Image>
+                                </View>
+                                <View style={{width:'60%'}}>
+                                    <Text style={{fontWeight:'bold'}}>
+                                        Belum di ubah
+                                    </Text>
+                                </View>
+                                <View>
+                                </View>
+                            </View>
+                        :
                             <View style={{flexDirection:'row', alignItems:'center'}}>
                                 <View style={styles.menu_button}>
                                     <Image style={styles.img_1} source={Logo_store2}></Image>
@@ -99,6 +120,10 @@ export default class ProfileScreen extends React.Component{
                                     />
                                 </View>
                             </View>
+                        }
+
+                            
+
                         </View>
                 </View>
                 <View style={styles.menu_food}>

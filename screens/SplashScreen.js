@@ -24,30 +24,20 @@ export default class SplashScreen extends React.Component{
         firebase.auth().onAuthStateChanged(user => {
             this.props.navigation.navigate(user ? 'App' : 'Auth')
             // if(user){
-            //     firebase.database().ref('Jekfood/Users/'+firebase.auth().currentUser.uid+'/Restaurant').set({
-            //         idResto:this.uid,
-            //         resto_name: this.state.resto_name,
-            //         location: this.state.location,
-            //         status_resto:false,
-            //         timestamp:this.timestamp
+            //     const id = firebase.auth().currentUser.uid;
+            //     firebase.database().ref('Jekfood/Users/'+id).on('value', snap =>{
+            //         const data = (snap.val() !== null);
+            //         if (!data){
+            //             firebase.database().ref('Jekfood/Users/'+firebase.auth().currentUser.uid+'/Restaurant').set({
+            //                 idResto:this.uid,
+            //                 resto_name: this.state.resto_name,
+            //                 location: this.state.location,
+            //                 status_resto:false,
+            //                 timestamp:this.timestamp
+            //             })
+            //         }
             //     })
             // }
-
-            if(user){
-                const id = firebase.auth().currentUser.uid;
-                firebase.database().ref('Jekfood/Users/'+id).on('value', snap =>{
-                    const data = (snap.val() !== null);
-                    if (!data){
-                        firebase.database().ref('Jekfood/Users/'+firebase.auth().currentUser.uid+'/Restaurant').set({
-                            idResto:this.uid,
-                            resto_name: this.state.resto_name,
-                            location: this.state.location,
-                            status_resto:false,
-                            timestamp:this.timestamp
-                        })
-                    }
-                })
-            }
         })
     }
 

@@ -1,10 +1,20 @@
 import React from 'react';
 import MapView, { Polyline as Polylines } from 'react-native-maps';
-import { StyleSheet, View, Text, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Text, ActivityIndicator, TouchableOpacity, YellowBox } from 'react-native';
 import Marker from 'react-native-maps';
 import Polyline from '@mapbox/polyline';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
+import * as firebase from 'firebase';
+import _ from 'lodash';
+
+YellowBox.ignoreWarnings(['Setting a timer']);
+const _console = _.clone(console);
+console.warn = message => {
+    if (message.indexOf('Setting a timer') <= -1) {
+        _console.warn(message);
+    }
+};
 
 export default class MapAddress extends React.Component {
   constructor(props) {
@@ -25,6 +35,7 @@ export default class MapAddress extends React.Component {
       x: 'false',
       cordLatitude:0,
       cordLongitude:0,
+      street:''
     };
 
     this.mergeLot = this.mergeLot.bind(this);
@@ -96,19 +107,36 @@ export default class MapAddress extends React.Component {
         this.setState({ distance, time })
         this.setState({
           nameLoc: loc[0]+','+loc[1],
-          nameDes: nameDes[0]+','+nameDes[0]
+          nameDes: nameDes[0]+','+nameDes[1]
         })
       } catch(error) {
         console.log('Error: ', error)
       }
     }
 
+    handleUpResto(){
+      const data = {
+        location:this.state.concatDes,
+        street:this.state.nameDes
+      }
+      firebase.database().ref('Jekfood/Users/'+firebase.auth().currentUser.uid+'/Restaurant').update({
+          ...data
+      }).then( ref => {
+        this.props.navigation.goBack();
+        
+    })
+    .catch(error => {
+        alert(error);
+    })
+  }
+
+
   render(){
     const { latitude, longitude } = this.state
 
     if(latitude){
       return (
-        <View style={{flex:1}}>
+        <View style={{flex:1, alignItems:'center'}}>
           <MapView
           style={{width:'100%',height:500}}
           showsUserLocation
@@ -136,8 +164,20 @@ export default class MapAddress extends React.Component {
           </MapView>
           <View>
             <Text style={styles.name_loc}>Posisi anda saat ini</Text>
-          <Text>{this.state.nameLoc}</Text>
+            <Text>{this.state.nameLoc}</Text>
           </View>
+
+          <View>
+            <Text style={styles.name_loc}>Posisi anda yang baru</Text>
+            <View style={styles.box_loc}>
+              <Text>{this.state.nameDes}</Text>
+              <Text>{this.state.concatDes}</Text>
+            </View>
+          </View>
+
+          <TouchableOpacity style={styles.btn_ok} onPress={()=> this.handleUpResto()}>
+            <Text>Konfirmasi</Text>
+          </TouchableOpacity>
         </View>
       );
     }
@@ -156,6 +196,22 @@ const styles = StyleSheet.create({
         margin:10,
         fontSize:20,
         fontWeight:'bold'
+    },
+    btn_ok:{
+      height:50,
+      width:327,
+      borderRadius:4,
+      backgroundColor:'gray',
+      alignItems:'center',
+      justifyContent:'center'
+      
+    },
+    box_loc:{
+      margin:5,
+      height:100,
+      width:327,
+      borderRadius:4,
+      borderWidth:0.5
     }    
 })
 

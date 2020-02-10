@@ -1,13 +1,16 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, TextInput} from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, TextInput, YellowBox} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as firebase from 'firebase';
-// import Fire from '../Fire';
+import _ from 'lodash';
 
-// import Constants from 'expo-constants';
-// import * as Location from 'expo-location';
-// import * as Permissions from 'expo-permissions';
-
+YellowBox.ignoreWarnings(['Setting a timer']);
+const _console = _.clone(console);
+console.warn = message => {
+    if (message.indexOf('Setting a timer') <= -1) {
+        _console.warn(message);
+    }
+};
 
 export default class UpdateResto extends React.Component{
 
@@ -18,9 +21,14 @@ export default class UpdateResto extends React.Component{
         location:0,
         idResto:'',
         restoStatus:null,
-        errorMessage: null
+        errorMessage: null,
+        street:'',
+        update:null
     };
 
+    componentDidMount(){
+        this.getCurrentLoc();
+    }
 
     get uid(){
         return (firebase.auth().currentUser || {}).uid;
@@ -31,44 +39,33 @@ export default class UpdateResto extends React.Component{
     }
 
     handleUpResto(){
-            firebase.database().ref('Jekfood/Users/'+firebase.auth().currentUser.uid+'/Restaurant').set({
+            firebase.database().ref('Jekfood/Users/'+firebase.auth().currentUser.uid+'/Restaurant').update({
                 idResto:this.uid,
                 resto_name: this.state.resto_name,
                 location: this.state.location,
                 status_resto:true,
                 timestamp:this.timestamp
                 
+            }).then(ref =>{
+                this.props.navigation.goBack();
             })
         }
-        // componentDidMount() {
-        //     if (Platform.OS === 'android' && !Constants.isDevice) {
-        //         this.setState({
-        //         errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
-        //         });
-        //     } else {
-        //         this._getLocationAsync();
-        //     }
-        // }
-        
-        // _getLocationAsync = async () => {
-        //     let { status } = await Permissions.askAsync(Permissions.LOCATION);
-        //     if (status !== 'granted') {
-        //         this.setState({
-        //         errorMessage: 'Permission to access location was denied',
-        //         });
-        //     }
-        
-        //     let location = await Location.getCurrentPositionAsync({});
-        //     this.setState({ location });
-        // };
+    
+    getCurrentLoc(){
+        firebase.database().ref('Jekfood/Users/'+firebase.auth().currentUser.uid+'/Restaurant').on('value', snap =>{
+            const data = snap.val();
+            if(data !== null){
+                this.setState({data});
+                this.state.street = data.street
+                this.state.location = data.location
+            }else{
+                this.setState({update: true })
+            }
+            
+        })
+    }
 
     render(){
-        // let text = 'Waiting..';
-        // if (this.state.errorMessage) {
-        //     text = this.state.errorMessage;
-        // } else if (this.state.location) {
-        //     text = JSON.stringify(this.state.location);
-        // }
         return(
             <SafeAreaView style={styles.content}>
                 <View style={styles.header}>
@@ -92,20 +89,37 @@ export default class UpdateResto extends React.Component{
                     <View>
                         <Text style={styles.label_email}>Alamat Restoran</Text>
                     </View>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('MapAddress')}>
-                        <Text>
-                            pilih lewat maps
-                        </Text>
-                        
+                    <TouchableOpacity style={styles.maps} onPress={() => this.props.navigation.navigate('MapAddress')}>
+                        <View style={{flexDirection:'row'}}>
+                            <View style={{margin:5}}> 
+                                <Ionicons name="ios-map" size={24}></Ionicons>
+                            </View>
+                            <View style={{margin:5}}>
+                                <Text>
+                                pilih lewat maps
+                                </Text>
+                            </View>
+                        </View>
                     </TouchableOpacity>
+
+                    <View>
+                        <Text style={styles.label_email}>Detail Alamat Restoran</Text>
+                    </View>
+
+                    {this.state.update ? 
+                    <View style={styles.currentLoc}>
+                    <Text style={styles.label_loc}></Text>
+                    </View>
+                    :
+                    <View style={styles.currentLoc}>
+                    <Text style={styles.label_loc}>{this.state.street}</Text>
+                    </View>
+                    }
+                    
 
                     <TouchableOpacity style={styles.button_update} onPress={()=>this.handleUpResto()}>
                         <Text>Update</Text>
                     </TouchableOpacity>
-                    
-                        {/* <Text>
-                            {text}
-                        </Text> */}
                 </View>
 
             </SafeAreaView>
@@ -160,5 +174,22 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
         borderRadius:4
+    },
+    maps:{
+        width:327,
+        height:50,
+        borderRadius:4,
+        backgroundColor:'gainsboro',
+        justifyContent:'center',
+        alignItems:'center'
+    },
+    currentLoc:{
+        height:100,
+        width:327,
+        borderWidth:0.5,
+        borderRadius:4
+    },
+    label_loc:{
+
     }
 })

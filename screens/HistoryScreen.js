@@ -10,7 +10,7 @@ export default class HistoryScreen extends React.Component{
     }
 
     componentDidMount(){
-    this.readStatus();
+    // this.readStatus();
     }
 
     readStatus(){
@@ -53,7 +53,7 @@ export default class HistoryScreen extends React.Component{
                     <Text style={{marginTop:35, fontWeight:'bold'}}>Riwayat Pesanan</Text>
                 </View>
 
-                <Text>Riwayat Pesanan</Text>
+                {/* <Text>Riwayat Pesanan</Text>
                 <View style={{}}>
                 <Switch
                 onValueChange={(value) => this.toggleSwitch(value) }
@@ -66,7 +66,7 @@ export default class HistoryScreen extends React.Component{
                     <Text>
                         Test alert
                     </Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </View>
         )
     }
